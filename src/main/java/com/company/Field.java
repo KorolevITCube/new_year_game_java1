@@ -12,13 +12,7 @@ public class Field extends JPanel {
     Image fon, pkg, hp, end;
     int x = 400, y;
     int difficult;
-    int score = 0;
-    int life = 3;
-    int randomBombTime;
-    int lifeScore = 0;
-    Item[] item;
     Timer tm, tmUpdate, tmBomb;
-    Item bomb;
     boolean gameOver = false;
     public Field(int diff) {
         try {
