@@ -25,11 +25,12 @@ public class Field extends JPanel {
 // Звуковой файл
             Clip clipSound;
 //Воспроизводимый файл
-            File soundFile = new File(getClass().getResource("resources/music.mp3").toURI());
+            File soundFile = new File((getClass().getResource("/resources/music.wav")).toURI());
 //получение информации о файле
             AudioFileFormat aff = AudioSystem.getAudioFileFormat(soundFile);
             AudioFormat af = aff.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, af);
+            System.out.println(info.toString());
 //проверка на возможность воспроизвести данный файл
             if (AudioSystem.isLineSupported(info)) {
 //создание потока
@@ -43,22 +44,23 @@ public class Field extends JPanel {
                 clipSound.start();
             }
         } catch (Exception exc) {
-            exc.getMessage();
+            System.out.println("fail to find and read");
+            System.out.println(exc.getMessage());
         }
         item = new Item[7];
         for (int i = 0; i < 7; i++) {
             try {
-                item[i] = new Item(ImageIO.read(getClass().getResource("resources/item" + i + ".png")));
+                item[i] = new Item(ImageIO.read(getClass().getResource("/resources/item" + i + ".png")));
             } catch (Exception e) {
                 System.out.println("Не загружен подарок с названием item" + i);
             }
         }
         try {
-            end = ImageIO.read(getClass().getResource("resources/end.png"));
-            fon = ImageIO.read(getClass().getResource("resources/fon.png"));
-            pkg = ImageIO.read(getClass().getResource("resources/paket.png"));
-            hp = ImageIO.read(getClass().getResource("resources/heart.png"));
-            bomb = new Item(ImageIO.read(getClass().getResource("resources/bomb.png")));
+            end = ImageIO.read(getClass().getResource("/resources/end.png"));
+            fon = ImageIO.read(getClass().getResource("/resources/fon.jpeg"));
+            pkg = ImageIO.read(getClass().getResource("/resources/box.png"));
+            hp = ImageIO.read(getClass().getResource("/resources/heart.png"));
+            bomb = new Item(ImageIO.read(getClass().getResource("/resources/bomb.png")));
         } catch (Exception e) {
         }
         tm = new Timer(30, new ActionListener() {
@@ -104,13 +106,13 @@ public class Field extends JPanel {
     public void paintComponent(Graphics gr) {
         super.paintComponent(gr);
         if (gameOver) {
-            gr.drawImage(end, 0, 0, 800, 600, this);
+            gr.drawImage(end, 300, 100, 200, 200, this);
             Font fntScore = new Font("Verdana", 0, 60);
             gr.setFont(fntScore);
             gr.setColor(Color.red);
             gr.drawString("Ваш счёт: " + score, 100, 300);
         } else {
-            gr.drawImage(fon, 0, 0, null);
+            gr.drawImage(fon, 0, 0,800,600, null);
             gr.drawImage(pkg, x, 470, 100, 100, null);
             for (int i = 1; i <= life; i++) {
                 gr.drawImage(hp, 780 - (35 * i), 25, 30,
