@@ -13,7 +13,6 @@ public class Field extends JPanel {
     int x = 400, y;
     int difficult;
     Timer tm, tmUpdate, tmBomb;
-    boolean gameOver = false;
     public Field(int diff) {
         try {
             end = ImageIO.read(getClass().getResource("/resources/end.png"));
