@@ -21,32 +21,6 @@ public class Field extends JPanel {
     Item bomb;
     boolean gameOver = false;
     public Field(int diff) {
-        try {
-// Звуковой файл
-            Clip clipSound;
-//Воспроизводимый файл
-            File soundFile = new File((getClass().getResource("/resources/music.wav")).toURI());
-//получение информации о файле
-            AudioFileFormat aff = AudioSystem.getAudioFileFormat(soundFile);
-            AudioFormat af = aff.getFormat();
-            DataLine.Info info = new DataLine.Info(Clip.class, af);
-            System.out.println(info.toString());
-//проверка на возможность воспроизвести данный файл
-            if (AudioSystem.isLineSupported(info)) {
-//создание потока
-                clipSound = (Clip) AudioSystem.getLine(info);
-                AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
-//открытие потока
-                clipSound.open(ais);
-//установка на циклическое воспроизведение
-                clipSound.loop(Clip.LOOP_CONTINUOUSLY);
-//воспроизведение файла
-                clipSound.start();
-            }
-        } catch (Exception exc) {
-            System.out.println("fail to find and read");
-            System.out.println(exc.getMessage());
-        }
         item = new Item[7];
         for (int i = 0; i < 7; i++) {
             try {
@@ -105,73 +79,28 @@ public class Field extends JPanel {
     }
     public void paintComponent(Graphics gr) {
         super.paintComponent(gr);
-        if (gameOver) {
-            gr.drawImage(end, 300, 100, 200, 200, this);
-            Font fntScore = new Font("Verdana", 0, 60);
-            gr.setFont(fntScore);
-            gr.setColor(Color.red);
-            gr.drawString("Ваш счёт: " + score, 100, 300);
-        } else {
-            gr.drawImage(fon, 0, 0,800,600, null);
-            gr.drawImage(pkg, x, 470, 100, 100, null);
-            for (int i = 1; i <= life; i++) {
-                gr.drawImage(hp, 780 - (35 * i), 25, 30,
-                        30, null);
-            }
-            Font fntScore = new Font("Verdana", 0, 30);
-            gr.setFont(fntScore);
-            gr.setColor(Color.red);
-            gr.drawString("" + score, 10, 25);
-            if (lifeScore == 1000) {
-                life++;
-                lifeScore = 0;
-            }
-            if (drawBomb(gr) || drawItem(gr)) {
-                gameOver = true;
-                repaint();
-            }
+        gr.drawImage(fon, 0, 0,800,600, null);
+        gr.drawImage(pkg, x, 470, 100, 100, null);
+        Font fntScore = new Font("Verdana", 0, 30);
+        gr.setFont(fntScore);
+        gr.setColor(Color.red);
+        gr.drawString("" + score, 10, 25);
+        if (lifeScore == 1000) {
+            life++;
+            lifeScore = 0;
+        }
+        if (drawBomb(gr) || drawItem(gr)) {
+            gameOver = true;
+            repaint();
         }
     }
     boolean drawBomb(Graphics gr) {
         bomb.draw(gr);
-        if (bomb.isActive) {
-            if ((bomb.y + bomb.img.getHeight(null)) >= 470)
-            {
-                if (Math.abs(bomb.x - x) > 100) {
-                    bomb.isActive = false;
-                } else {
-                    tm.stop();
-                    tmUpdate.stop();
-                    tmBomb.stop();
-                    return true;
-                }
-            }
-        }
         return false;
     }
     boolean drawItem(Graphics gr) {
         for (int i = 0; i < 7; i++) {
             item[i].draw(gr);
-            if (item[i].isActive) {
-                if (item[i].y + item[i].img.getHeight(null)
-                        >= 470) {
-                    if (Math.abs(item[i].x - x) > 100) {
-                        if (life == 1) {
-                            tm.stop();
-                            tmUpdate.stop();
-                            tmBomb.stop();
-                            return true;
-                        } else {
-                            life--;
-                            item[i].isActive = false;
-                        }
-                    } else {
-                        item[i].isActive = false;
-                        score += 100;
-                        lifeScore += 1000;
-                    }
-                }
-            }
         }
         return false;
     }
